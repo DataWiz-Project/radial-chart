@@ -28,9 +28,9 @@ const data = [
 console.log(data);
 
 const margin = {top: 100, right: 0, bottom: 0, left: 0},
-    width = 460 - margin.left - margin.right,
-    height = 460 - margin.top - margin.bottom,
-    innerRadius = 90,
+    width = 1000 - margin.left - margin.right,
+    height = 1000 - margin.top - margin.bottom,
+    innerRadius = 100,
     outerRadius = Math.min(width, height) / 2;
 
 const svg = d3.select('#dataWiz')
@@ -51,17 +51,17 @@ const y = d3.scaleRadial()
     .domain([0, d3.max(data.map(d => d.scale))])
 
 const ybis = d3.scaleRadial()
-    .range([innerRadius, 5])
-    .domain([0, d3.max(data.map(d => d.scale))])
+    .range([innerRadius, 0])
+    .domain([d3.max(data.map(d => d.scale)), 0])
 
 svg.append('g')
     .selectAll('path')
     .data(data)
     .join('path')
-        .attr('fill', '#69b3a2')
+        .attr('fill', 'red')
         .attr('class', 'yo')
         .attr('d', d3.arc()
-        .innerRadius(innerRadius)
+        .innerRadius(d => ybis(d.scale))
         .outerRadius(d => y(d.scale))
         .startAngle(d => x(d.pb))
         .endAngle(d => x(d.pb) + x.bandwidth())
@@ -86,7 +86,7 @@ svg.append('g')
     .data(data)
     .enter()
     .append('path')
-        .attr('fill', 'red')
+        .attr('fill', 'green')
         .attr('d', d3.arc()
         .innerRadius( function(d) { return ybis(0)})
         .outerRadius( function(d) { return ybis(d.scale); })
