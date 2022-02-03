@@ -1,37 +1,23 @@
 
-const prosentConverter = (threshold, shoot) => {
+// Convert methods
+const percentageIncrease = (threshold, shoot) => {
     const increase = shoot - threshold
     return parseInt(increase / shoot * 100)
   }
-  const prosentConverter2 = (threshold, shoot) => {
+  const percentageDecrease = (threshold, shoot) => {
     const decrease = threshold - shoot
     return parseInt(decrease / shoot * 100)
   }
 
-
-// const prosentConverter = (threshold, shoot) => {
-//     return (threshold / shoot) * 100
-//   }
-//   const prosentConverter2 = (threshold, shoot) => {
-//     return (shoot / threshold) * 100
-//   }
-  
   const getScale =(threshold, shoot) => {
     if(threshold > shoot){
-      return prosentConverter2(threshold, shoot)
+      return percentageDecrease(threshold, shoot)
     }else{
-      return prosentConverter(threshold, shoot)
+      return percentageIncrease(threshold, shoot)
     }
   }
 
-//   const getNewScale = (threshold, shoot) => {
-//     if(threshold < shoot){
-//         return 100 * (shoot - (threshold) / threshold)
-//     }else{
-//         return 100 * (threshold - (shoot) / shoot)
-//     }
-//   }
-
+// Temporary data
 const data = [
     {id: 1, pb: "climate change", threshhold: -2.35, shoot: 18.95, scale: getScale(-2.35, 18.95)},
     {id: 1, pb: "Ocean acidification", threshhold: -1.59, shoot: 15.33, scale: getScale(-1.59, 15.33)},
@@ -43,13 +29,14 @@ const data = [
 
 console.log(data.map(d => "Planetery boundary: " + d.pb + " Scale: " + d.scale));
 
-
+// Chart size settings
 const margin = {top: 100, right: 0, bottom: 0, left: 0},
     width = 1000 - margin.left - margin.right,
     height = 1000 - margin.top - margin.bottom,
     innerRadius = 0,
-    outerRadius = Math.min(width, height) / 2;
+    outerRadius = 0 ;
 
+// Chart container
 const svg = d3.select('#dataWiz')
     .append('svg')
         .attr('width', width + margin.left + margin.right)
@@ -58,24 +45,24 @@ const svg = d3.select('#dataWiz')
         .attr('transform', `translate(${width/2 + margin.left}, ${height/2 + margin.top})`);
 
 
+// Scales 
 const x = d3.scaleBand()
     .range([0, 2 * Math.PI])
     .align(0)
     .domain(data.map(d => d.pb));
 
 const y = d3.scaleRadial()
-    .range([innerRadius, outerRadius])
+    .range([100, 200])
     .domain([0, d3.max(data.map(d => d.scale))])
 
 const color = d3.scaleOrdinal()
     .range(["green", "red", "yellow", "blue", "purple"])
 
-console.log(y(data.map(d => d.scale)))
-
 const ybis = d3.scaleRadial()
     .range([innerRadius, 0])
-    .domain([d3.max(data.map(d => d.scale)), 0])
+    .domain([d3.max(data.map(d => d.scale)),d3.min(data.map(d => d.scale)) ])
 
+// Displays the data in an arc (circle)
 svg.append('g')
     .selectAll('path')
     .data(data)
@@ -90,6 +77,7 @@ svg.append('g')
         .padAngle(0.01)
         .padRadius(innerRadius))
 
+// Place Labels 
 svg.append('g')
     .selectAll('g')
     .data(data)
