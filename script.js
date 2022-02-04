@@ -35,6 +35,11 @@ const margin = {top: 100, right: 0, bottom: 0, left: 0},
     height = 1000 - margin.top - margin.bottom,
     innerRadius = 0,
     outerRadius = 0 ;
+// const margin = {top: 100, right: 0, bottom: 0, left: 0},
+//     width = 460 - margin.left - margin.right,
+//     height = 460 - margin.top - margin.bottom,
+//     innerRadius = 90,
+//     outerRadius = Math.min(width, height) / 2;
 
 // Chart container
 const svg = d3.select('#dataWiz')
@@ -51,9 +56,18 @@ const x = d3.scaleBand()
     .align(0)
     .domain(data.map(d => d.pb));
 
-const y = d3.scaleRadial()
-    .range([100, 200])
-    .domain([0, d3.max(data.map(d => d.scale))])
+// const y = d3.scaleRadial()
+//     .range([100, 200])
+//     .domain([0, d3.max(data.map(d => d.scale))])
+
+// const y = d3.scaleLinear()
+//     .domain([0, d3.max(data, d => d.scale)])
+//     .range([innerRadius * innerRadius, outerRadius * outerRadius]);
+// return Object.assign(d => Math.sqrt(y(d)), y);
+
+const z = d3.scaleOrdinal()
+    .domain(data.map(d => d.pb).slice(2))
+    .range(["#CC0033", "#00bc12", "#F5EB00", "#FAB300"])
 
 const color = d3.scaleOrdinal()
     .range(["green", "red", "yellow", "blue", "purple"])
@@ -64,10 +78,15 @@ const ybis = d3.scaleRadial()
 
 // Displays the data in an arc (circle)
 svg.append('g')
+    .selectAll("g")
+    .data(d3.stack().keys(data.map(d => d.pb).slice(1))(data))
+    .join("g")
+        .attr('fill', d => z(d.key))
+
+
     .selectAll('path')
-    .data(data)
+    .data(d => d)
     .join('path')
-        .attr('fill', color)
         .attr('class', 'yo')
         .attr('d', d3.arc()
         .innerRadius(d => ybis(d.scale))
@@ -90,19 +109,24 @@ svg.append('g')
         .attr("transform", function(d) { return (x(d.pb) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) < Math.PI ? "rotate(180)" : "rotate(0)"; })
         .style('font-size', '11px')
         .attr('alignment-baseline', 'middle')
-    
-// svg.append('g')
-//     .selectAll('path')
-//     .data(data)
-//     .enter()
-//     .append('path')
-//         .attr('fill', 'green')
-//         .attr('d', d3.arc()
-//         .innerRadius( function(d) { return ybis(0)})
-//         .outerRadius( function(d) { return ybis(d.scale); })
-//         .startAngle( function(d) { return x(d.pb);})
-//         .endAngle(function(d) { return x(d.pb) + x.bandwidth();})
-//         .padAngle(0.01)
-//         .padRadius(innerRadius))
 
+// Value axis
+// svg.append("g")
+//     .call(y)
+//     .style("transform", `translateY(${height/2}px)`)
+//     .attr("height", height/2)
+//     .attr("width", "8px")
+    
+//     svg.append("g")
+//     .selectAll("path")
+//     .data(data)
+//     .join("path")
+//       .attr("fill", "red")
+//       .attr("d", d3.arc()     // imagine your doing a part of a donut plot
+//           .innerRadius( d => ybis(d["Scale"]))
+//           .outerRadius( d => ybis(d['Scale']))
+//           .startAngle(d => x(d.pb))
+//           .endAngle(d => x(d.pb) + x.bandwidth())
+//           .padAngle(0.01)
+//           .padRadius(innerRadius))
 
