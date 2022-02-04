@@ -88,7 +88,8 @@ svg.append('g')
         .startAngle(d => x(d.pb))
         .endAngle(d => x(d.pb) + x.bandwidth())
         .padAngle(0.01)
-        .padRadius(innerRadius))
+        .padRadius(innerRadius));
+
 
 svg.append('g')
     .selectAll('g')
@@ -100,8 +101,13 @@ svg.append('g')
     .append('text')
         .text(d => d.pb)
         .attr("transform", function(d) { return (x(d.pb) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) < Math.PI ? "rotate(180)" : "rotate(0)"; })
-        .style('font-size', '11px')
-        .attr('alignment-baseline', 'middle')
+        .style('font-size', '21px')
+        .attr('alignment-baseline', 'middle');
+
+// const colorScale = d3.scaleOrdinal()
+//           .domain(data.map(d => d.key))
+//           .range(d3.schemeSpectral)
+
     
 // svg.append('g')
 //     .selectAll('path')
