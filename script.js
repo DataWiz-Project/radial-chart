@@ -1,36 +1,3 @@
-
-// const prosentConverter = (threshold, shoot) => {
-//     const increase = shoot - threshold
-//     return parseInt(increase / shoot * 100)
-//   }
-//   const prosentConverter2 = (threshold, shoot) => {
-//     const decrease = threshold - shoot
-//     return parseInt(decrease / shoot * 100)
-//   }
-
-  
-//   const getScale =(threshold, shoot) => {
-//     if(threshold > shoot){
-//       return prosentConverter2(threshold, shoot)
-//     }else{
-//       return prosentConverter(threshold, shoot)
-//     }
-//   }
-
-
-// const data = [
-//     {id: 1, pb: "climate change", threshhold: -2.35, shoot: 18.95, scale: getScale(-2.35, 18.95)},
-//     {id: 1, pb: "Ocean acidification", threshhold: -1.59, shoot: 15.33, scale: getScale(-1.59, 15.33)},
-//     {id: 1, pb: "Nitrogen", threshhold: 100, shoot: 72.7, scale: getScale(100, 72.7)},
-//     {id: 1, pb: "Phosphorus", threshhold: 1.1, shoot: 4, scale: getScale(1.1, 4)},
-//     {id: 1, pb: "Biodiversity", threshhold: 0.6, shoot: 0.45, scale: getScale(0.6, 0.45)},
-  
-// ];
-
-// console.log(data.map(d => "Planetery boundary: " + d.pb + " Scale: " + d.scale));
-
-
-
 const prosentConverter = (threshold, shoot) => {
     const increase = shoot - threshold
     return parseInt(increase / shoot * 100)
@@ -113,6 +80,8 @@ const svg = d3.select("#dataWiz")
         .style("font-size", "11px")
         .attr("alignment-baseline", "middle")
 
+
+// Add the ring axis
 svg.append('g')
     .attr("text-anchor", "middle")
     .call(g => g.append("text")
