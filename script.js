@@ -78,7 +78,7 @@ const svg = d3.select("#dataWiz")
         .text(function(d){return(d.pb)})
         .attr("transform", function(d) { return (x(d.pb) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) < Math.PI ? "rotate(180)" : "rotate(0)"; })
         .style("font-size", "11px")
-        .attr("alignment-baseline", "middle")
+        .attr("alignment-baseline", "middle");
 
 
 // Add the ring axis
@@ -104,3 +104,25 @@ svg.append('g')
          .clone(true)
             .attr("fill", "#000")
             .attr("stroke", "none")));
+
+// Data for the ring
+const dataRing = [20];
+
+// Y axis for the inner circle
+const ybis = d3.scaleRadial()
+      .range([innerRadius, 80])   // Domain will be defined later.
+      .domain([0, 20]);
+
+// Bars for the inner circle
+svg.append("g")
+    .selectAll("path")
+    .data(dataRing)
+    .join("path")
+      .attr("fill", "green")
+      .attr("d", d3.arc()     // imagine your doing a part of a donut plot
+          .innerRadius(d => ybis(0))
+          .outerRadius(d => ybis(d))
+          .startAngle(10)
+          .endAngle(x.bandwidth())
+          .padAngle(0.01)
+          .padRadius(innerRadius));
